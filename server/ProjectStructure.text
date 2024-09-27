@@ -1,0 +1,38 @@
+/project-root
+│
+├── /config
+│   └── db.js                 
+│
+├── /controllers
+│   ├── authController.js     
+│   └── noteController.js      
+│
+├── /middleware
+│   ├── authorize.js    
+│   └── validInfo.js           
+│
+├── /routes
+│   ├── authRoutes.js          
+│   └── notesRoutes.js        
+│
+├── /utils
+│   └── jwtGenerator.js        
+│
+├── /public
+│   └── index.html             
+│
+├── /client                    
+│   ├── /src
+│   │   ├── components        
+│   │   ├── pages              
+│   │   ├── App.js             
+│   │   └── index.js           
+│   └── package.json         
+│
+├── /node_modules              
+│
+├── .env                       
+├── .gitignore                 
+├── package.json               
+├── package-lock.json          
+└── server.js                  
