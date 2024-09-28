@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { XCircleIcon, CogIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 
-function HeaderPicture({ onClose, onLogout }) {
+function HeaderPicture({ onClose, onLogout  }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -18,8 +18,8 @@ function HeaderPicture({ onClose, onLogout }) {
   }, [onClose]);
 
   return (
-<div className="fixed w-screen h-screen top-0 left-0 flex items-center justify-center bg-black bg-opacity-50"  style={{ marginLeft: 0 }}>
-<div
+    <div className="fixed w-screen h-screen top-0 left-0 flex items-center justify-center bg-black bg-opacity-50" style={{ marginLeft: 0 }}>
+      <div
         ref={containerRef}
         className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full relative"
       >
@@ -34,7 +34,7 @@ function HeaderPicture({ onClose, onLogout }) {
 
         <div className="flex flex-col gap-4">
           <button
-            onClick={onLogout}
+            onClick={onLogout} 
             className="flex items-center justify-start gap-3 w-full py-2 px-4 text-lg font-medium text-gray-800 hover:text-gray-600 hover:bg-gray-200 transition-all duration-300 ease-in-out border border-gray-300 rounded-lg"
           >
             <ArrowRightOnRectangleIcon className="h-6 w-6" />

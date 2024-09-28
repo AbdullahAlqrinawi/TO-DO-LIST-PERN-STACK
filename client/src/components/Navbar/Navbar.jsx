@@ -4,13 +4,11 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import {CheckCircleIcon} from '@heroicons/react/24/solid';
 
-function Navbar({ isLoggedIn }) {
+function Navbar({ isLoggedIn, onLogout  }) {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    navigate("/login");
-  };
+
 
   const handleSearch = () => {
     // Logic for search
@@ -24,7 +22,7 @@ function Navbar({ isLoggedIn }) {
     <div className='bg-darkTeal flex items-center justify-between px-4 py-2 shadow-md space-x-4'>
     <h2 className='flex items-center text-xl font-semibold text-white transition-transform transform hover:scale-105'>
   DO IT
-  <CheckCircleIcon className="h-5 w-5 ml-2" /> {/* إضافة margin-left للفصل بين النص والأيقونة */}
+  <CheckCircleIcon className="h-5 w-5 ml-2" /> 
 </h2>
 
       
@@ -36,7 +34,7 @@ function Navbar({ isLoggedIn }) {
             handleSearch={handleSearch}
             onClearSearch={clearSearch}
           />
-          <ProfileInfo onLogout={handleLogout} />
+          <ProfileInfo onLogout={onLogout} />
         </>
       )}
     </div>

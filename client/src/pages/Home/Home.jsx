@@ -148,9 +148,14 @@ function Home() {
     setSelectedNotes(null);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token'); 
+    navigate('/');
+  };
+
   return (
     <>
-      <Navbar isLoggedIn={true} />
+      <Navbar isLoggedIn={true} onLogout={handleLogout} />
       <div className="container mx-auto mt-8">
         {loading ? (
           <p className="text-center">Loading...</p>
