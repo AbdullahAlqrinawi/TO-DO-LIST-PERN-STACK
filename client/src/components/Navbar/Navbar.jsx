@@ -1,21 +1,7 @@
-import React, { useState } from "react";
-import ProfileInfo from "../Cards/ProfileInfo";
-import { useNavigate } from "react-router-dom";
-import SearchBar from "../SearchBar/SearchBar";
+import LogoutIcon from "../LogoutScreen/LogoutIcon";
 import {CheckCircleIcon} from '@heroicons/react/24/solid';
 
 function Navbar({ isLoggedIn, onLogout  }) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
-
-
-
-  const handleSearch = () => {
-  };
-
-  const clearSearch = () => {
-    setSearchQuery("");
-  };
 
   return (
     <div className='bg-darkTeal flex items-center justify-between px-4 py-2 shadow-md space-x-4'>
@@ -27,13 +13,8 @@ function Navbar({ isLoggedIn, onLogout  }) {
       
       {isLoggedIn && (
         <>
-          <SearchBar 
-            value={searchQuery}
-            onChange={({ target }) => setSearchQuery(target.value)}
-            handleSearch={handleSearch}
-            onClearSearch={clearSearch}
-          />
-          <ProfileInfo onLogout={onLogout} />
+          
+          <LogoutIcon onLogout={onLogout} />
         </>
       )}
     </div>

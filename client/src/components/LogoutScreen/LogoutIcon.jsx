@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import HeaderPicture from '../HeaderPicture/HeaderPicture';
-import { CogIcon } from '@heroicons/react/24/solid';
+import LogoutScreen from './LogoutScreen';
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 
-function ProfileInfo({ onLogout }) { 
+function LogoutIcon({ onLogout }) { 
   const [headerSetting, setHeaderSetting] = useState(false);
 
   const handleClose = () => {
@@ -13,12 +13,12 @@ function ProfileInfo({ onLogout }) {
     <>
       <div className='flex items-center gap-3'>
       <button onClick={() => setHeaderSetting(true)} aria-label="Edit profile settings">
-          <CogIcon className="h-8 w-8 text-white" /> 
+          <ArrowRightOnRectangleIcon className="h-8 w-8 text-white" /> 
         </button>
       </div>
-      {headerSetting && <HeaderPicture onClose={handleClose} onLogout={onLogout} />}
+      {headerSetting && <LogoutScreen onClose={handleClose} onLogout={onLogout} />}
     </>
   );
 }
 
-export default ProfileInfo;
+export default LogoutIcon;

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { XCircleIcon, CogIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import { XCircleIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 
-function HeaderPicture({ onClose, onLogout  }) {
+function LogoutScreen({ onClose, onLogout }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -27,25 +27,20 @@ function HeaderPicture({ onClose, onLogout  }) {
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-transform transform hover:scale-110"
         >
-          <XCircleIcon className="h-8 w-8 text-red-700" />
+          <XCircleIcon className="h-7 w-7 text-red-700" /> {/* تصغير حجم الأيقونة */}
         </button>
 
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Settings</h2>
-
+        <h2 className="text-2xl font-medium text-gray-800 mb-4 text-center"> {/* تصغير حجم النص */}
+          Are you sure you want to log out?
+        </h2>
+        
         <div className="flex flex-col gap-4">
           <button
-            onClick={onLogout} 
+            onClick={onLogout}
             className="flex items-center justify-start gap-3 w-full py-2 px-4 text-lg font-medium text-gray-800 hover:text-gray-600 hover:bg-gray-200 transition-all duration-300 ease-in-out border border-gray-300 rounded-lg"
           >
             <ArrowRightOnRectangleIcon className="h-6 w-6" />
             Logout
-          </button>
-          <button
-            onClick={onClose}
-            className="flex items-center justify-start gap-3 w-full py-2 px-4 text-lg font-medium text-gray-800 hover:text-gray-600 hover:bg-gray-200 transition-all duration-300 ease-in-out border border-gray-300 rounded-lg"
-          >
-            <CogIcon className="h-6 w-6" />
-            Advanced Settings
           </button>
         </div>
       </div>
@@ -53,4 +48,4 @@ function HeaderPicture({ onClose, onLogout  }) {
   );
 }
 
-export default HeaderPicture;
+export default LogoutScreen;
