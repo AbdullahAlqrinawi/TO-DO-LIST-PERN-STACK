@@ -24,7 +24,7 @@ function Home() {
         navigate('/login');
         return;
       }
-
+  
       let id;
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
@@ -37,14 +37,16 @@ function Home() {
         navigate('/login');
         return;
       }
-
+  
       try {
         const { data } = await Axios.get(`${API_BASE_URL}/notes/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setNotes(data);
+  
+        const sortedNotes = data.sort((a, b) => b.is_star - a.is_star);
+        setNotes(sortedNotes);
         setMessage('');
       } catch (error) {
         if (error.response?.status === 401) {
@@ -57,9 +59,10 @@ function Home() {
         setLoading(false);
       }
     };
-
+  
     fetchNotes();
   }, [navigate]);
+  
 
   const createNote = async (note) => {
     try {
@@ -71,7 +74,7 @@ function Home() {
   
       const { data } = await Axios.post(`${API_BASE_URL}/notes/${userId}`, {
         ...note,
-        user_id: userId, // إضافة user_id هنا
+        user_id: userId, 
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -86,6 +89,22 @@ function Home() {
     }
   };
   
+  const toggleStarNote = async (note, setNotes) => {
+    try {
+        const updatedNote = { is_star: !note.is_star };
+        const response = await Axios.patch(`${API_BASE_URL}/notes/${note.id}/is_star`, updatedNote, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+
+        setNotes((prevNotes) =>
+            prevNotes.map((n) => (n.id === response.data.id ? response.data : n)).sort((a, b) => (b.is_star - a.is_star))
+        );
+    } catch (error) {
+        console.error('Error updating star status:', error);
+    }
+};
 
   const updateNote = async (updatedNote) => {
     try {
@@ -134,10 +153,8 @@ function Home() {
 
   const handleSave = (note) => {
     if (selectedNotes) {
-      // تعديل ملاحظة موجودة
       updateNote({ ...selectedNotes, ...note });
     } else {
-      // إنشاء ملاحظة جديدة
       createNote(note);
     }
   };
@@ -168,6 +185,7 @@ function Home() {
               notes={notes}
               onEdit={openEditModal}
               onDelete={deleteNote}
+              onStarNote={(note) => toggleStarNote(note, setNotes)} 
             />
           </>
         )}
@@ -182,7 +200,7 @@ function Home() {
         addEditSetting && (
           <AddEditNotes
             onClose={handleClose}
-            noteData={selectedNotes || {}} // تأكد من أن noteData ليست null
+            noteData={selectedNotes || {}} 
             onSave={handleSave}
           />
         )}

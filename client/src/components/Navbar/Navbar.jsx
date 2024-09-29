@@ -11,7 +11,6 @@ function Navbar({ isLoggedIn, onLogout  }) {
 
 
   const handleSearch = () => {
-    // Logic for search
   };
 
   const clearSearch = () => {

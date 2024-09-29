@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import HeaderPicture from '../HeaderPicture/HeaderPicture';
-import { gitInitials } from '../../utils/helper';
+import { CogIcon } from '@heroicons/react/24/solid';
 
-function ProfileInfo({ onLogout, userName }) { 
+function ProfileInfo({ onLogout }) { 
   const [headerSetting, setHeaderSetting] = useState(false);
 
   const handleClose = () => {
@@ -12,13 +12,11 @@ function ProfileInfo({ onLogout, userName }) {
   return (
     <>
       <div className='flex items-center gap-3'>
-        <button onClick={() => setHeaderSetting(true)} aria-label="Edit profile picture">
-          <div className='w-12 h-12 flex items-center justify-center rounded-full text-slate-950 font-medium bg-slate-100'>
-            {gitInitials(userName)} 
-          </div>
+      <button onClick={() => setHeaderSetting(true)} aria-label="Edit profile settings">
+          <CogIcon className="h-8 w-8 text-white" /> 
         </button>
       </div>
-      {headerSetting && <HeaderPicture onClose={handleClose}onLogout={onLogout} />}
+      {headerSetting && <HeaderPicture onClose={handleClose} onLogout={onLogout} />}
     </>
   );
 }

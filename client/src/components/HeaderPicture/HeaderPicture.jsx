@@ -30,7 +30,7 @@ function HeaderPicture({ onClose, onLogout  }) {
           <XCircleIcon className="h-8 w-8 text-red-700" />
         </button>
 
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Advanced Settings</h2>
+        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Settings</h2>
 
         <div className="flex flex-col gap-4">
           <button
@@ -45,7 +45,7 @@ function HeaderPicture({ onClose, onLogout  }) {
             className="flex items-center justify-start gap-3 w-full py-2 px-4 text-lg font-medium text-gray-800 hover:text-gray-600 hover:bg-gray-200 transition-all duration-300 ease-in-out border border-gray-300 rounded-lg"
           >
             <CogIcon className="h-6 w-6" />
-            Settings
+            Advanced Settings
           </button>
         </div>
       </div>

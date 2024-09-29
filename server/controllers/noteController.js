@@ -25,7 +25,6 @@ async function createNote(req, res) {
   }
 
   try {
-    // تأكد من أن user_id موجود
     const userCheck = await db.query("SELECT id FROM users WHERE id = $1", [user_id]);
     if (userCheck.rowCount === 0) {
       return res.status(404).send("User not found.");
