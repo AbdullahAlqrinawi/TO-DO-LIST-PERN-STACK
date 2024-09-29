@@ -1,12 +1,11 @@
+// Home.js
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import AddEditNotes from './AddEditNotes';
 import NoteList from '../../components/NoteList/NoteList';
-import Axios from 'axios';
+import { fetchNotes, createNote, updateNote, deleteNote, toggleStarNote } from '../../api/api.js';
 import { useNavigate } from 'react-router-dom';
-
-const API_BASE_URL = 'http://localhost:5000';
 
 function Home() {
   const [addEditSetting, setAddEditSetting] = useState(false);
@@ -17,193 +16,109 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchNotes = async () => {
+    const fetchNotesData = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
         setMessage('You need to log in to access your notes.');
         navigate('/login');
         return;
       }
-  
-      let id;
+
+      let userId;
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        id = payload.userId; 
-        console.log('User ID from token:', id);
+        userId = payload.userId;
       } catch (error) {
-        console.error('Error decoding token:', error);
         setMessage('Invalid token. Please log in again.');
         localStorage.removeItem('token');
         navigate('/login');
         return;
       }
-  
+
       try {
-        const { data } = await Axios.get(`${API_BASE_URL}/notes/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
-        const sortedNotes = data.sort((a, b) => b.is_star - a.is_star);
+        const notesData = await fetchNotes(token, userId);
+        const sortedNotes = notesData.sort((a, b) => b.is_star - a.is_star);
         setNotes(sortedNotes);
         setMessage('');
       } catch (error) {
+        setMessage('Error fetching notes: ' + error.response?.data?.error);
         if (error.response?.status === 401) {
           localStorage.removeItem('token');
           navigate('/login');
-        } else {
-          setMessage('Error fetching notes: ' + error.response?.data?.error);
         }
       } finally {
         setLoading(false);
       }
     };
-  
-    fetchNotes();
+
+    fetchNotesData();
   }, [navigate]);
-  
 
-  const createNote = async (note) => {
-    try {
-      const token = localStorage.getItem('token');
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const userId = payload.userId;
-  
-      console.log('Creating note with:', { ...note, user_id: userId });
-  
-      const { data } = await Axios.post(`${API_BASE_URL}/notes/${userId}`, {
-        ...note,
-        user_id: userId, 
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setNotes((prevNotes) => [...prevNotes, data]);
-      setMessage('');
-    } catch (error) {
-      const errorMessage = error.response?.data?.error || JSON.stringify(error.response?.data) || 'An unknown error occurred';
-      setMessage('Error creating note: ' + errorMessage);
-      console.error('Error creating note:', error);
-    }
-  };
-  
-  const toggleStarNote = async (note, setNotes) => {
-    try {
-        const updatedNote = { is_star: !note.is_star };
-        const response = await Axios.patch(`${API_BASE_URL}/notes/${note.id}/is_star`, updatedNote, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
+  const handleSave = async (note) => {
+    const token = localStorage.getItem('token');
+    const userId = JSON.parse(atob(token.split('.')[1])).userId;
 
-        setNotes((prevNotes) =>
-            prevNotes.map((n) => (n.id === response.data.id ? response.data : n)).sort((a, b) => (b.is_star - a.is_star))
-        );
-    } catch (error) {
-        console.error('Error updating star status:', error);
-    }
-};
-
-  const updateNote = async (updatedNote) => {
-    try {
-      const token = localStorage.getItem('token');
-      const { data } = await Axios.put(`${API_BASE_URL}/notes/${updatedNote.id}`, updatedNote, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setNotes((prevNotes) =>
-        prevNotes.map((note) => (note.id === data.id ? data : note))
-      );
-      setAddEditSetting(false);
-      setSelectedNotes(null);
-      setMessage('');
-    } catch (error) {
-      setMessage('Error updating note: ' + error.response?.data?.error);
-    }
-  };
-
-  const deleteNote = async (id) => {
-    try {
-      const token = localStorage.getItem('token');
-      await Axios.delete(`${API_BASE_URL}/notes/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
-      setMessage('');
-    } catch (error) {
-      setMessage('Error deleting note: ' + error.response?.data?.error);
-    }
-  };
-
-  const openEditModal = (note) => {
-    setSelectedNotes(note);
-    setAddEditSetting(true);
-  };
-
-  const handleOpen = () => {
-    setSelectedNotes(null); 
-    setAddEditSetting(true);
-  };
-  
-
-  const handleSave = (note) => {
     if (selectedNotes) {
-      updateNote({ ...selectedNotes, ...note });
+      const updatedNote = { ...selectedNotes, ...note };
+      const data = await updateNote(updatedNote, token);
+      setNotes((prevNotes) =>
+        prevNotes.map((n) => (n.id === data.id ? data : n))
+      );
     } else {
-      createNote(note);
+      const newNote = { ...note, user_id: userId };
+      const data = await createNote(newNote, token);
+      setNotes((prevNotes) => [...prevNotes, data]);
     }
-  };
-  
-
-  const handleClose = () => {
     setAddEditSetting(false);
     setSelectedNotes(null);
+    setMessage('');
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token'); 
-    navigate('/');
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem('token');
+    await deleteNote(id, token);
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+  };
+
+  const handleToggleStar = async (note) => {
+    const token = localStorage.getItem('token');
+    const updatedNote = await toggleStarNote(note, token);
+    setNotes((prevNotes) =>
+      prevNotes.map((n) => (n.id === updatedNote.id ? updatedNote : n)).sort((a, b) => (b.is_star - a.is_star))
+    );
   };
 
   return (
     <>
-      <Navbar isLoggedIn={true} onLogout={handleLogout} />
+      <Navbar isLoggedIn={true} onLogout={() => navigate('/')} />
       <div className="container mx-auto mt-8">
         {loading ? (
           <p className="text-center">Loading...</p>
         ) : (
           <>
-            {message && (
-              <p className="text-red-600 text-center mb-4">{message}</p>
-            )}
+            {message && <p className="text-red-600 text-center mb-4">{message}</p>}
             <NoteList
               notes={notes}
-              onEdit={openEditModal}
-              onDelete={deleteNote}
-              onStarNote={(note) => toggleStarNote(note, setNotes)} 
+              onEdit={(note) => { setSelectedNotes(note); setAddEditSetting(true); }}
+              onDelete={handleDelete}
+              onStarNote={handleToggleStar}
             />
           </>
         )}
       </div>
       <button
-        onClick={handleOpen}
+        onClick={() => { setSelectedNotes(null); setAddEditSetting(true); }}
         className="fixed w-16 h-16 flex items-center justify-center rounded-full bg-darkTeal hover:bg-hoverTeal shadow-lg transition-transform transform hover:scale-105 right-10 bottom-10"
       >
         <PlusIcon className="h-8 w-8 text-white" />
       </button>
-      {
-        addEditSetting && (
-          <AddEditNotes
-            onClose={handleClose}
-            noteData={selectedNotes || {}} 
-            onSave={handleSave}
-          />
-        )}
+      {addEditSetting && (
+        <AddEditNotes
+          onClose={() => { setAddEditSetting(false); setSelectedNotes(null); }}
+          noteData={selectedNotes || {}}
+          onSave={handleSave}
+        />
+      )}
     </>
   );
 }
