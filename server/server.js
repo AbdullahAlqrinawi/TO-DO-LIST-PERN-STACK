@@ -11,7 +11,6 @@ app.use(express.json());
 app.use(cors());
 
 
-// استخدام الـ routes
 app.use("/notes", notesRouter);  
 app.use("/auth", authRouter); 
 app.use("/dashboard", dashboard); 

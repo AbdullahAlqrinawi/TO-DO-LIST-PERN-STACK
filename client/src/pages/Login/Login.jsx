@@ -12,8 +12,8 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState(""); // حالة جديدة لعرض الأخطاء
-  const [loading, setLoading] = useState(false); // لإظهار مؤشر تحميل
+  const [error, setError] = useState(""); 
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,7 +23,6 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // تحقق من صحة البريد الإلكتروني
     if (!validEmail(formData.email)) {
       setError("Please enter a valid email address");
       return;
@@ -34,17 +33,14 @@ const Login = () => {
       return;
     }
 
-    // مسح الرسائل السابقة
     setError("");
     setLoading(true);
 
     try {
       const response = await axios.post(`${API_BASE_URL}/auth/login`, formData);
       
-      // حفظ التوكن في localStorage
       localStorage.setItem("token", response.data.token);
 
-      // إعادة التوجيه إلى لوحة التحكم بعد تسجيل الدخول
       navigate("/dashboard");
     } catch (error) {
       setError(error.response?.data?.error || "Invalid email or password.");
@@ -73,10 +69,8 @@ const Login = () => {
                 />
                 <PasswordInput value={formData.password} onChange={(e) => handleChange(e)} />
                 
-                {/* عرض الخطأ إن وجد */}
                 {error && <p className='text-red-500 text-sm pb-1'>{error}</p>}
 
-                {/* عرض مؤشر تحميل عند الضغط على زر الدخول */}
                 <button type="submit" className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-darkTeal hover:bg-hoverTeal" disabled={loading}>
                   {loading ? "Logging in..." : "Log in"}
                 </button>

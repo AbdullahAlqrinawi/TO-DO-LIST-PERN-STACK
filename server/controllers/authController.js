@@ -2,7 +2,6 @@ import db from "../config/db.js";
 import bcrypt from "bcrypt";
 import jwtGenerator from "../utils/jwtGenerator.js";
 
-// Register a new user
 export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
     try {
@@ -12,17 +11,14 @@ export const registerUser = async (req, res) => {
             return res.status(400).json({ error: "User already exists" });
         }
 
-        // Hash the password
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Insert new user into database
         const newUser = await db.query(
             "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
             [name, email, hashedPassword]
         );
 
-        // Generate JWT token
         const token = jwtGenerator(newUser.rows[0].id);
         return res.json({ token });
 
@@ -32,7 +28,6 @@ export const registerUser = async (req, res) => {
     }
 };
 
-// Login user
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -42,13 +37,11 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ error: "Password or Email is incorrect" });
         }
 
-        // Compare password
         const validPassword = await bcrypt.compare(password, user.rows[0].password);
         if (!validPassword) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
 
-        // Generate JWT token
         const token = jwtGenerator(user.rows[0].id);
         return res.json({ token });
 
@@ -58,7 +51,6 @@ export const loginUser = async (req, res) => {
     }
 };
 
-// Verify user token
 export const verifyUser = (req, res) => {
     try {
         res.json(true);

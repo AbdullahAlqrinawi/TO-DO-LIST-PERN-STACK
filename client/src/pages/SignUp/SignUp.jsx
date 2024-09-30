@@ -55,8 +55,8 @@ function SignUp() {
 
     try {
       const response = await axios.post(`${API_BASE_URL}/auth/register`, { email, password, name });
-      setMessage("Registration successful!"); // رسالة النجاح
-      localStorage.setItem("token", response.data.token); // تخزين التوكن في localStorage
+      setMessage("Registration successful!"); 
+      localStorage.setItem("token", response.data.token); 
 
       navigate("/dashboard");
     } catch (error) {

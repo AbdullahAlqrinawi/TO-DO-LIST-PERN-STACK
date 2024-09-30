@@ -27,10 +27,10 @@ function LogoutScreen({ onClose, onLogout }) {
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-transform transform hover:scale-110"
         >
-          <XCircleIcon className="h-7 w-7 text-red-700" /> {/* تصغير حجم الأيقونة */}
+          <XCircleIcon className="h-7 w-7 text-red-700" /> 
         </button>
 
-        <h2 className="text-2xl font-medium text-gray-800 mb-4 text-center"> {/* تصغير حجم النص */}
+        <h2 className="text-2xl font-medium text-gray-800 mb-4 text-center"> 
           Are you sure you want to log out?
         </h2>
         
