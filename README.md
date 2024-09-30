@@ -12,7 +12,7 @@
 ![Login and Sign Up](https://github.com/user-attachments/assets/019d8676-baba-4638-aac6-86c1d586b78a)
 
 ### Add Note
-![Add Note]()
+![Add Note](https://github.com/user-attachments/assets/3cb0f9db-dd13-4e53-b609-8a5a7dc067ab)
 
 ### No Note Page
 ![No Note Page](https://github.com/user-attachments/assets/5a6fa433-bd91-40fa-b849-0b7d7cd14652)
